@@ -36,6 +36,8 @@ public class Deque<Item> implements Iterable<Item>
 
     public void addFirst(Item item)
     {
+        if (item == null) throw new IllegalArgumentException();
+
         // add the item to the front
         Node<Item> newNode = new Node<Item>();
         newNode.item = item;
@@ -56,6 +58,8 @@ public class Deque<Item> implements Iterable<Item>
 
     public void addLast(Item item)
     {
+        if (item == null) throw new IllegalArgumentException();
+
         Node<Item> newNode = new Node<Item>();
         newNode.item = item;
         newNode.next = null;
@@ -139,7 +143,7 @@ public class Deque<Item> implements Iterable<Item>
             //Item oldFrontItem = removeLast();
             return oldFrontItem;
         }
-        public void remove() {}
+        public void remove() {throw new UnsupportedOperationException();}
     }
 
     public static void main(String[] args)
