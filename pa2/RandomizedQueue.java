@@ -7,24 +7,24 @@ import edu.princeton.cs.algs4.StdRandom;
 public class RandomizedQueue<Item> implements Iterable<Item>
 {
     private int front;
-    private int N;
+    private int n;
     private Item[] a;
 
     public RandomizedQueue()
     { 
         a = (Item[]) new Object[1];
-        N = 0;
+        n = 0;
         front = -1;
     }
 
     public boolean isEmpty()
     {
-        return N == 0;
+        return n == 0;
     }
 
     public int size()
     {
-        return N;
+        return n;
     }
 
     public void enqueue(Item item)
@@ -36,17 +36,19 @@ public class RandomizedQueue<Item> implements Iterable<Item>
          * update N
          */
         if (item == null) throw new IllegalArgumentException();
-        if (front == 0){
-            resize(2 * N);
+        if (front == 0)
+        {
+            resize(2 * n);
         }
-        else if (front == -1){
+        else if (front == -1)
+        {
             front = 0;
             a[0] = item;
-            N++;
+            n++;
             return;
         }
         a[--front] = item;
-        N++;
+        n++;
     }
 
     public Item dequeue()
@@ -59,12 +61,14 @@ public class RandomizedQueue<Item> implements Iterable<Item>
          * output the value previously saved
          */
         // to do: if N == 0, raise exception
-        int end = front + N - 1;
+        int end = front + n - 1;
         int randomIndex;
-        if (N > 1){
-            randomIndex = StdRandom.uniform(front, N);
+        if (front != n)
+        {
+            randomIndex = StdRandom.uniform(front, n);
         }
-        else {
+        else
+        {
             randomIndex = front;
         }
         Item tmp = a[randomIndex];
@@ -72,24 +76,26 @@ public class RandomizedQueue<Item> implements Iterable<Item>
         a[end] = tmp;
         Item res = a[end];
         a[end] = null; // avoid loitering
-        --N;
-        if ( N > 0 && N == a.length / 4) resize(a.length / 2);
+        --n;
+        if (n == 0) front = -1;
+        if ( n > 0 && n == a.length / 4) resize(a.length / 2);
         return res;
     }
 
     public Item sample(){
-        if (N == 0){
+        if (n == 0){
             throw new NoSuchElementException();
         }
-        int r = StdRandom.uniform(front, N);
+
+        int r = StdRandom.uniform(front, front + n);
         return a[r];
     }
 
     private void resize(int newSize)
     {
         Item[] newA = (Item[]) new Object[newSize];
-        int newFront = newSize - N;
-        for (int k = 0; k < N; k++){
+        int newFront = newSize - n;
+        for (int k = 0; k < n; k++){
             newA[newFront + k] = a[k + front];
         }
         front = newFront;
@@ -105,21 +111,23 @@ public class RandomizedQueue<Item> implements Iterable<Item>
     private class RandomizedQueueIterable implements Iterator<Item>
     {
         private int i;
-        private Item popSequence[];
-        public boolean hasNext() {return i > -1;}
+        private Item[] popSequence;
 
         public RandomizedQueueIterable(){
             // copy array a into a new one (since it will be modified)
             // shuffle those values and initialize i to 0
-            popSequence = (Item[]) new Object[N];
-            System.arraycopy(a, front, popSequence, 0, N);
+            popSequence = (Item[]) new Object[n];
+            System.arraycopy(a, front, popSequence, 0, n);
             StdRandom.shuffle(popSequence);
-            i = N - 1;
+            i = n - 1;
         }
+
+        public boolean hasNext() { return i > -1; }
 
         public Item next()
         {
-            if (i == -1){
+            if (i == -1)
+            {
                 throw new NoSuchElementException();
             }
             Item res = popSequence[i];
@@ -134,19 +142,29 @@ public class RandomizedQueue<Item> implements Iterable<Item>
     }
 
     public static void main(String[] args){
-        RandomizedQueue<String> rq = new RandomizedQueue<String>();
-        //RandomizedQueue<Integer> rq = new RandomizedQueue<Integer>();
-        //int seq[] = {1, 2, 3, 4};
+        RandomizedQueue<Integer> rq = new RandomizedQueue<Integer>();
+        //RandomizedQueue<String> rq = new RandomizedQueue<String>();
+        /*
         String  seq[] = {"Blas", "Tinto", "Mecha", "Nacho"};
-        for (int i = 0; i < seq.length; i++){
+        for (int i = 0; i < seq.length; i++)
+        {
             rq.enqueue(seq[i]);
         }
-        for (String s: rq){
+        for (String s: rq)
+        {
             StdOut.println(s);
         }
         StdOut.println("New iterator");
-        for (String s: rq){
+        for (String s: rq)
+        {
             StdOut.println(s);
         }
+        */
+        rq.enqueue(2);
+        rq.enqueue(0);
+        rq.enqueue(1);
+        StdOut.println(rq.sample());
+        StdOut.println(rq.sample());
+        StdOut.println(rq.sample());
     }
 }

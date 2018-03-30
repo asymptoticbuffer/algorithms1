@@ -8,13 +8,15 @@ public class Permutation
         RandomizedQueue<String> rq = new RandomizedQueue<String>();
         String s;
         int howMany = Integer.parseInt(args[0]);
-        while(howMany > 0){
+        while(!StdIn.isEmpty())
+        {
             s = StdIn.readString();
             rq.enqueue(s);
-            howMany--;
         }
-        for (String result: rq){
-            StdOut.println(result);
+        while(howMany > 0)
+        {
+            StdOut.println(rq.dequeue());
+            howMany--;
         }
     }
 }

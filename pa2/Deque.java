@@ -6,8 +6,7 @@ import edu.princeton.cs.algs4.StdOut;
 
 public class Deque<Item> implements Iterable<Item>
 {
-    private int N;
-    private int capacity;
+    private int n;
     private Node<Item> front;
     private Node<Item> end;
 
@@ -20,40 +19,40 @@ public class Deque<Item> implements Iterable<Item>
 
     public Deque()
     {
-        int N = 0;
-        Node<Item> front = null;
-        Node<Item> end = null;
+        n = 0;
+        front = null;
+        end = null;
     }
 
-    public boolean isEmpty(){
-        return N == 0;
+    public boolean isEmpty()
+    {
+        return n == 0;
     }
 
     public int size()
     {
-        return N;
+        return n;
     }
 
     public void addFirst(Item item)
     {
         if (item == null) throw new IllegalArgumentException();
-
-        // add the item to the front
         Node<Item> newNode = new Node<Item>();
         newNode.item = item;
         newNode.next = null;
         newNode.previous = null;
-        if (isEmpty()){
+        if (isEmpty())
+        {
             front = newNode;
             end = front;
-            ++N;
+            ++n;
             return;
         }
         Node<Item> oldFront = front;
         front = newNode;
         front.next = oldFront;
         oldFront.previous = front;
-        N++;
+        n++;
     }
 
     public void addLast(Item item)
@@ -64,16 +63,17 @@ public class Deque<Item> implements Iterable<Item>
         newNode.item = item;
         newNode.next = null;
         newNode.previous = null;
-        if (isEmpty()){
+        if (isEmpty())
+        {
             end = newNode;
             front = end;
-            N++;
+            n++;
             return;
         }
         newNode.previous = end;
         end.next = newNode;
         end = end.next;
-        N++;
+        n++;
     }
 
     public Item removeFirst()
@@ -83,11 +83,11 @@ public class Deque<Item> implements Iterable<Item>
         }
 
         Item oldFrontItem = front.item;
-        if (N == 1) {
+        if (n == 1) {
             end = null;
             front = null;
         }
-        else if (N == 2) {
+        else if (n == 2) {
             front = front.next;
             front.previous = null;
             end = front;
@@ -96,22 +96,22 @@ public class Deque<Item> implements Iterable<Item>
             front = front.next;
             front.previous = null;
         }
-        --N;
+        --n;
         return oldFrontItem;
     }
 
     public Item removeLast()
     {
-        if (N == 0) {
+        if (n == 0) {
             throw new NoSuchElementException();
         }
 
         Item oldEndItem = end.item;
-        if (N == 1) {
+        if (n == 1) {
             end = null;
             front = null;
         }
-        else if (N == 2) {
+        else if (n == 2) {
             end = end.previous;
             end.next = null;
             front = end;
@@ -121,7 +121,7 @@ public class Deque<Item> implements Iterable<Item>
             end.next = null;
         }
 
-        --N;
+        --n;
         return oldEndItem;
 
 
@@ -136,27 +136,24 @@ public class Deque<Item> implements Iterable<Item>
     private class DequeIterator implements Iterator<Item>
     {
         private Node<Item> iteratorFront = front;
-        public boolean hasNext() {return N > 0;}
+        public boolean hasNext() { return iteratorFront != null; }
         public Item  next()
         {
-            Item oldFrontItem = removeFirst();
-            //Item oldFrontItem = removeLast();
-            return oldFrontItem;
+            if (!hasNext()) {
+                throw new NoSuchElementException();
+            }
+            Item result = iteratorFront.item;
+            iteratorFront = iteratorFront.next;
+            return result;
         }
-        public void remove() {throw new UnsupportedOperationException();}
+        public void remove() { throw new UnsupportedOperationException(); }
     }
 
     public static void main(String[] args)
     {
         Deque<String> dq = new Deque<String>();
-        while (!StdIn.isEmpty()){
-            String item = StdIn.readString();
-            dq.addFirst(item);
-        }
-        for (String s: dq){
-            StdOut.println(s);
-        }
+        dq.addLast("SAD");
+        dq.addLast("BLAS");
+        Iterator<String> it = dq.iterator();
     }
-
-
 }
